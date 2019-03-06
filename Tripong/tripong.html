@@ -3,9 +3,10 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
 			<title>Pong</title>
-			<script type="text/javascript" src="../Common/webgl-utils.js"></script>
-			<script type="text/javascript" src="../Common/initShaders.js"></script>
-			<script type="text/javascript" src="../Common/MV.js"></script>
+			<script type="text/javascript" src="Common/webgl-utils.js"></script>
+			<script type="text/javascript" src="Common/initShaders.js"></script>
+			<script type="text/javascript" src="Common/MV.js"></script>
+
 			<script type="text/javascript" src="tripong.js"></script>
             
 			<script  type="x-shader/x-vertex" id="vertex-shader">
@@ -44,7 +45,6 @@
     </head>
     
     <body onload="init()">
-		<canvas width="512" height="512" id="gl-canvas">
-		</canvas>
+		<canvas id="gl-canvas" width="512" height="512"></canvas>
     </body>
 </html>

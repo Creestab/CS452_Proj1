@@ -1,19 +1,50 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<script id="vertex-shader" type="x-shader/x-vertex">
-		</script>
-		
-		<script id="fragment-shader" type="x-shader/x-fragment">
-		</script>
-		
-		<script type="text/javascript" src="../Common/webgl-utils.js"></script>
-		<script type="text/javascript" src="../Common/initShaders.js"></script>
-		<script type="text/javascript" src="../Common/MV.js"></script>
-		<script type="text/javascript" src="lab3.js"></script>
-	</head>
-	
-	<body onload = "initGL()">
-
-	</body>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+			<title>Pong</title>
+			<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+			<script type="text/javascript" src="../Common/initShaders.js"></script>
+			<script type="text/javascript" src="../Common/MV.js"></script>
+			<script type="text/javascript" src="tripong.js"></script>
+            
+			<script  type="x-shader/x-vertex" id="vertex-shader">
+				attribute vec4 myPosition;
+				void main(){
+					gl_PointSize = 1.0;
+					gl_Position = myPosition;
+				}
+			</script>
+			
+			<script  type="x-shader/x-fragment" id="fragment-shader">
+				void main(){
+					gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0); //RGB Opacity
+				}
+			</script>
+			
+			
+			<script  type="x-shader/x-fragment" id="fragment-shader-square">
+				void main(){
+					gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0); //RBG Opacity
+				}
+			</script>   
+			
+			<script  type="x-shader/x-fragment" id="fragment-shader-ellipse">
+				void main(){
+					gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); //RGB Opacity
+				}
+			</script> 
+			
+			<script  type="x-shader/x-fragment" id="fragment-shader-paddle">
+				void main(){
+					gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); //RGB Opacity
+				}
+			</script> 
+			
+    </head>
+    
+    <body onload="init()">
+		<canvas width="512" height="512" id="gl-canvas">
+		</canvas>
+    </body>
 </html>

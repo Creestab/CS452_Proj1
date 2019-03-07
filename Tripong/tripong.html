@@ -6,47 +6,42 @@
 			<script type="text/javascript" src="Common/webgl-utils.js"></script>
 			<script type="text/javascript" src="Common/initShaders.js"></script>
 			<script type="text/javascript" src="Common/MV.js"></script>
-
+			
 			<script type="text/javascript" src="tripong.js"></script>
             
-			<script  type="x-shader/x-vertex" id="vertex-shader">
+			<script type="x-shader/x-vertex" id="vertex-shader"> 
 				attribute vec4 myPosition;
-				void main(){
-					gl_PointSize = 1.0;
-					gl_Position = myPosition;
-				}
-			</script>
+                uniform float theta;
+                void main() {
+                    float xf;
+                    float yf;
+                    float xi;
+                    float yi;
+                    
+                    xi = myPosition.x;
+                    yi = myPosition.y;
+                    
+                    xf =  xi * cos( theta ) + yi * sin( theta );
+                    yf = -xi * sin( theta ) + yi * cos( theta );
+                    
+                    gl_Position.x = xf;
+                    gl_Position.y = yf;
+                    gl_Position.z = .0;
+                    gl_Position.w = 1.0;
+                    
+                    gl_PointSize = 1.0;
+                }
+                </script>
+            
+            <script type="x-shader/x-fragment" id="fragment-shader">
+                precision mediump float;
+                uniform vec4 shapeColor;
+                void main() {
+                    gl_FragColor = shapeColor;
+                }
+            </script>
 			
-			<script  type="x-shader/x-fragment" id="fragment-shader">
-				void main(){
-					gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0); //RGB Opacity
-				}
-			</script>
 			
-			
-			<script  type="x-shader/x-fragment" id="fragment-shader-square">
-				void main(){
-					gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0); //RBG Opacity
-				}
-			</script>   
-			
-			<script  type="x-shader/x-fragment" id="fragment-shader-ellipse">
-				void main(){
-					gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); //RGB Opacity
-				}
-			</script> 
-			
-			<script  type="x-shader/x-fragment" id="fragment-shader-paddle">
-				void main(){
-					gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0); //RGB Opacity
-				}
-			</script> 
-			
-			<script  type="x-shader/x-fragment" id="fragment-shader-ball">
-				void main(){
-					gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); //RGB Opacity
-				}
-			</script> 
 			
     </head>
     

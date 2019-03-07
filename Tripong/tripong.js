@@ -25,6 +25,8 @@ function init() {
 	shaderProgramSquare = initShaders( gl, "vertex-shader", "fragment-shader-square");
 	shaderProgramEllipse = initShaders( gl, "vertex-shader", "fragment-shader-ellipse");
 	shaderProgramPaddle = initShaders( gl, "vertex-shader", "fragment-shader-paddle");
+	shaderProgramBall = initShaders( gl, "vertex-shader", "fragment-shader-ball");
+	
 	
 	gl.useProgram( shaderProgram );
 	drawPadLeft();
@@ -37,6 +39,9 @@ function init() {
 	
 	gl.useProgram( shaderProgramPaddle );
 	drawPadLower();
+	
+	gl.useProgram( shaderProgramBall );
+	drawBall();
 }
 
 function drawPadLeft() {
@@ -137,6 +142,31 @@ function drawPadLower() {
 	gl.drawArrays( gl.TRIANGLE_FAN, 0, 4);
 	
 }
+
+function drawBall() {
+	
+	//Enter array set up code here
+	var p0 = vec2 (.05, .05);
+	var p1 = vec2 (.05, -.05);
+	var p2 = vec2 (-.05, -.05);
+	var p3 = vec2 (-.05, .05);
+	
+	
+	var arrayOfPoints = [p0,p1,p2,p3];
+	
+	//Create a buffer on the graphics card and send array to buffer for use in the shaders
+	var bufferId = gl.createBuffer();
+	gl.bindBuffer ( gl.ARRAY_BUFFER, bufferId );
+	gl.bufferData ( gl.ARRAY_BUFFER, flatten(arrayOfPoints), gl.STATIC_DRAW);
+	
+	//Create pointer that iterates over the array of points in the shader code
+	var myPositionAttribute = gl.getAttribLocation (shaderProgram, "myPosition");
+	gl.vertexAttribPointer( myPositionAttribute, 2, gl.FLOAT, false, 0, 0);
+	gl.enableVertexAttribArray ( myPositionAttribute );
+	
+	//Force a draw of the triangle using the drawArray() call
+	gl.drawArrays( gl.TRIANGLE_FAN, 0, 4);
+	}
 
 function render(){
 	requestAnimFrame( render );

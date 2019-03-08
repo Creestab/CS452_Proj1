@@ -10,14 +10,14 @@ Hit the bouncing square with your paddle to keep it from hitting your side of th
 Controls:
 
 Player 1 (Red)
-	Up:
-	Down:
+	Up:	W
+	Down:	S
 Player 2 (Blue)
-	Up:
-	Down:
+	Up:	[
+	Down:	]
 Player 3 (Green)
-	Up:
-	Down:
+	Up:	Up Arrow
+	Down:	Down Arrow
 Player 4 (Yellow)
-	Up:
-	Down:
+	Up:	V
+	Down:	B

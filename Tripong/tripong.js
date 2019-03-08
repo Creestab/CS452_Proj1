@@ -4,12 +4,54 @@ var shaderProgram;
 var padLeftBufferId;
 var padRightBufferId;
 var padUpBufferId;
-var padLowBufferId;
+var padBottomBufferId;
 var ballBufferId;
 
 var thetaUniform;
 var colorUniform;
 
+var arrayOfKeysDown = {};
+
+var yIncr;
+var xIncr;
+
+//Paddle LEFT
+    var pL0;
+	var pL1;
+	var pL2;
+	var pL3;
+	
+	var arrayOfPointsLEFT;
+//Paddle RIGHT
+    var pR0;
+	var pR1;
+	var pR2;
+	var pR3;
+	
+	var arrayOfPointsRIGHT;
+//Paddle UP
+    var pU0;
+	var pU1;
+	var pU2;
+	var pU3;
+	
+	var arrayOfPointsUP;
+//Paddle Bottom (Bottom)
+    var pB0;
+	var pB1;
+	var pB2;
+	var pB3;
+	
+	var arrayOfPointsBOTTOM;
+//Paddle BALL
+	var p0;
+	var p1;
+	var p2;
+	var p3;
+	
+	var arrayOfPointsBALL;
+	
+	
 /// store key codes and currently pressed ones
 var keys = {};
     //Right Player Controls
@@ -19,9 +61,9 @@ var keys = {};
 	keys.W = 87;
 	keys.S = 83;
 	//Upper Player Controls
-	keys.RightBracket = 219; //[
-	keys.LeftBracket = 221; //]
-	//Low Player Controls
+	keys.O = 79; //[
+	keys.P = 80; //]
+	//Bottom Player Controls
 	keys.V = 86;
 	keys.B = 66;
 
@@ -36,6 +78,18 @@ function init() {
 	
 	//Set up the back ground color
 	gl.clearColor(0.0,0.0,0.0,1.0);
+	
+	//INITIALIZE LIST OF KEY PRESSES
+	for(var iter = 0; iter <87; iter++){
+		arrayOfKeysDown[iter] = false;
+	}
+	
+	//incrementing variables
+	xIncr = 0.02;
+	yIncr = 0.02;
+	
+	score_label = document.getElementById("score-label");
+	score_label.innerHTML = "Red Score: 0";
 		
 	//Create shader program, needs vertex and fragment shader code 
 	//in GSL to be written in HTML file 
@@ -47,7 +101,7 @@ function init() {
 	setupPadLeft();
 	setupPadRight();
 	setupPadUp();
-	setupPadLow();
+	setupPadBottom();
 	setupBall();
 	
 	render();
@@ -56,17 +110,17 @@ function init() {
 function setupPadLeft() {
 	
 	//Enter array set up code here
-	var p0 = vec2 (-0.95, 0.0);
-	var p1 = vec2 (-0.95, -0.4);
-	var p2 = vec2 (-0.90, -0.4);
-	var p3 = vec2 (-0.90, 0.0);
+    pL0 = vec2 (-0.95, 0.0);
+	pL1 = vec2 (-0.95, -0.4);
+	pL2 = vec2 (-0.90, -0.4);
+	pL3 = vec2 (-0.90, 0.0);
 	
-	var arrayOfPoints = [p0,p1,p2,p3];
+	arrayOfPointsLEFT = [pL0,pL1,pL2,pL3];
 	
 	// Create a buffer on the graphics card, and send array to the buffer for use in the shaders
     padLeftBufferId = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, padLeftBufferId );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(arrayOfPoints), gl.STATIC_DRAW );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(arrayOfPointsLEFT), gl.STATIC_DRAW );
     
     // While the pointer to iterate over the array of points used to be in the setup, 
 	// it is now moved over to the render functionto ensure that the pad buffers and 
@@ -76,38 +130,38 @@ function setupPadLeft() {
 function setupPadRight() {
 	
 	//Enter array set up code here
-	var p0 = vec2 (0.95, 0.0);
-	var p1 = vec2 (0.95, -0.4);
-	var p2 = vec2 (0.90, -0.4);
-	var p3 = vec2 (0.90, 0.0);
+	pR0 = vec2 (0.95, 0.0);
+	pR1 = vec2 (0.95, -0.4);
+	pR2 = vec2 (0.90, -0.4);
+	pR3 = vec2 (0.90, 0.0);
 	
-	var arrayOfPoints = [p0,p1,p2,p3];
+	arrayOfPointsRIGHT = [pR0,pR1,pR2,pR3];
 	
 	// Create a buffer on the graphics card, and send array to the buffer for use in the shaders
     padRightBufferId = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, padRightBufferId );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(arrayOfPoints), gl.STATIC_DRAW );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(arrayOfPointsRIGHT), gl.STATIC_DRAW );
     
     // While the pointer to iterate over the array of points used to be in the setup, 
 	// it is now moved over to the render functionto ensure that the pad buffers and 
 	// the ball buffer can be iterated over
-
+	
 	}
 
 function setupPadUp() {
 	
 	//Enter array set up code here
-	var p0 = vec2 (0.0, 0.95);
-	var p1 = vec2 (-0.4, 0.95);
-	var p2 = vec2 (-0.4, 0.90);
-	var p3 = vec2 (0.0, 0.90);
+	pU0 = vec2 (0.0, 0.95);
+	pU1 = vec2 (-0.4,0.95);
+	pU2 = vec2 (-0.4,0.90);
+	pU3 = vec2 (0.0, 0.90);
 	
-	var arrayOfPoints = [p0,p1,p2,p3];
+	arrayOfPointsUP = [pU0,pU1,pU2,pU3];
 	
 	// Create a buffer on the graphics card, and send array to the buffer for use in the shaders
     padUpBufferId = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, padUpBufferId );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(arrayOfPoints), gl.STATIC_DRAW );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(arrayOfPointsUP), gl.STATIC_DRAW );
     
     // While the pointer to iterate over the array of points used to be in the setup, 
 	// it is now moved over to the render functionto ensure that the pad buffers and 
@@ -116,20 +170,20 @@ function setupPadUp() {
 	
 }
 
-function setupPadLow() {
+function setupPadBottom() {
 	
-	//Enter array set up code here
-	var p0 = vec2 (0.0, -0.95);
-	var p1 = vec2 (-0.4, -0.95);
-	var p2 = vec2 (-0.4, -0.90);
-	var p3 = vec2 (0.0, -0.90);
+	//Enter array set up code here B -> Bottom
+	pB0 = vec2 (0.0, -0.95);
+	pB1 = vec2 (-0.4,-0.95);
+	pB2 = vec2 (-0.4,-0.90);
+	pB3 = vec2 (0.0, -0.90);
 	
-	var arrayOfPoints = [p0,p1,p2,p3];
+	arrayOfPointsBOTTOM = [pB0,pB1,pB2,pB3];
 	
 	// Create a buffer on the graphics card, and send array to the buffer for use in the shaders
-    padLowBufferId = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, padLowBufferId );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(arrayOfPoints), gl.STATIC_DRAW );
+    padBottomBufferId = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, padBottomBufferId );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(arrayOfPointsBOTTOM), gl.STATIC_DRAW );
     
     // While the pointer to iterate over the array of points used to be in the setup, 
 	// it is now moved over to the render functionto ensure that the pad buffers and 
@@ -140,57 +194,96 @@ function setupPadLow() {
 function setupBall() {
 	
 	//Enter array set up code here
-	var p0 = vec2 (.05, .05);
-	var p1 = vec2 (.05, -.05);
-	var p2 = vec2 (-.05, -.05);
-	var p3 = vec2 (-.05, .05);
+	p0 = vec2 (.05, .05);
+	p1 = vec2 (.05, -.05);
+	p2 = vec2 (-.05, -.05);
+	p3 = vec2 (-.05, .05);
 	
-	
-	var arrayOfPoints = [p0,p1,p2,p3];
+	arrayOfPointsBALL = [p0,p1,p2,p3];
 	
 	// Create a buffer on the graphics card, and send array to the buffer for use in the shaders
     ballBufferId = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, ballBufferId );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(arrayOfPoints), gl.STATIC_DRAW );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(arrayOfPointsBALL), gl.STATIC_DRAW );
     
     // While the pointer to iterate over the array of points used to be in the setup, 
 	// it is now moved over to the render functionto ensure that the pad buffers and 
 	// the ball buffer can be iterated over
 }
 
-function AnimPadLeft(){
-	// FOLLOWING LINES ADDRESS THE RENDERING OF THE LEFT PADDLE
+function AnimPadRight(){
+	// FOLLOWING LINES ADDRESS THE RENDERING OF THE Right PADDLE
     
     // RE-BIND THE LEFT PAD BUFFER (since the setup XXX () function binds the array buffer 
-	// to padLowBufferId, padRightBufferId, padUpBufferId, ballBufferId, padLeftBufferId
-    gl.bindBuffer( gl.ARRAY_BUFFER, padLeftBufferId );
-    
-    // The pointer to iterate over the array of points for the square moves here
-    var myPositionAttribute = gl.getAttribLocation( shaderProgram, "myPosition" );
-    gl.vertexAttribPointer( myPositionAttribute, 2, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( myPositionAttribute );
-
-	
-	
-    gl.uniform4f( colorUniform, 1.0, 0.0, 0.0, 1.0 ); // send the color RED to the fragment shader
-    
-    // Force a draw of the square using the
-    // 'drawArrays()' call
-    gl.drawArrays( gl.TRIANGLE_FAN, 0, 4 );
-	
-}
-
-function AnimPadRight() {
-	// FOLLOWING LINES ADDRESS THE RENDERING OF THE RIGHT PADDLE
-    
-    // RE-BIND THE RIGHT PAD BUFFER (since the setup XXX () function binds the array buffer 
-	// to padLowBufferId, padRightBufferId, padUpBufferId, ballBufferId
+	// to padBottomBufferId, padRightBufferId, padUpBufferId, ballBufferId, padLeftBufferId
     gl.bindBuffer( gl.ARRAY_BUFFER, padRightBufferId );
     
     // The pointer to iterate over the array of points for the square moves here
     var myPositionAttribute = gl.getAttribLocation( shaderProgram, "myPosition" );
     gl.vertexAttribPointer( myPositionAttribute, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( myPositionAttribute );
+
+	if(arrayOfKeysDown[keys.ArrowUp] == true){
+		pR0[1] += yIncr;
+		pR1[1] += yIncr;
+		pR2[1] += yIncr;
+		pR3[1] += yIncr;
+		
+	}else if(arrayOfKeysDown[keys.ArrowDown] == true){
+			pR0[1] -= yIncr;
+			pR1[1] -= yIncr;
+			pR2[1] -= yIncr;
+			pR3[1] -= yIncr;
+		}
+	arrayOfPointsRIGHT = [pR0,pR1,pR2,pR3];
+	
+	// Create a buffer on the graphics card, and send array to the buffer for use in the shaders
+    padRightBufferId = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, padRightBufferId );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(arrayOfPointsRIGHT), gl.STATIC_DRAW );
+    
+	
+	
+	gl.uniform4f( colorUniform, 1.0, 0.0, 0.0, 1.0 ); // send the color RED to the fragment shader
+    // Force a draw of the square using the
+    // 'drawArrays()' call
+    gl.drawArrays( gl.TRIANGLE_FAN, 0, 4 );
+	
+}
+
+function AnimPadLeft() {
+	// FOLLOWING LINES ADDRESS THE RENDERING OF THE Left PADDLE
+    
+    // RE-BIND THE RIGHT PAD BUFFER (since the setup XXX () function binds the array buffer 
+	// to padBottomBufferId, padRightBufferId, padUpBufferId, ballBufferId
+    gl.bindBuffer( gl.ARRAY_BUFFER, padLeftBufferId );
+    
+    // The pointer to iterate over the array of points for the square moves here
+    var myPositionAttribute = gl.getAttribLocation( shaderProgram, "myPosition" );
+    gl.vertexAttribPointer( myPositionAttribute, 2, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( myPositionAttribute );
+	
+	if(arrayOfKeysDown[keys.W] == true){ //Up
+		pL0[1] += yIncr;
+		pL1[1] += yIncr;
+		pL2[1] += yIncr;
+		pL3[1] += yIncr;
+		
+	}else if(arrayOfKeysDown[keys.S] == true){ //Down
+			pL0[1] -= yIncr;
+			pL1[1] -= yIncr;
+			pL2[1] -= yIncr;
+			pL3[1] -= yIncr;
+		}
+	arrayOfPointsLEFT = [pL0,pL1,pL2,pL3];
+	
+	// Create a buffer on the graphics card, and send array to the buffer for use in the shaders
+    padLeftBufferId = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, padLeftBufferId );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(arrayOfPointsLEFT), gl.STATIC_DRAW );
+	
+	
+	
 	
     gl.uniform4f( colorUniform, 0.0, 1.0, 0.0, 1.0 ); // send the color GREED to the fragment shader
     
@@ -200,18 +293,40 @@ function AnimPadRight() {
 }
 
 function AnimPadUp() {
-	// FOLLOWING LINES ADDRESS THE RENDERING OF THE RIGHT PADDLE
+	// FOLLOWING LINES ADDRESS THE RENDERING OF THE Upper PADDLE
     
     // RE-BIND THE RIGHT PAD BUFFER (since the setup XXX () function binds the array buffer 
-	// to padLowBufferId, padRightBufferId, padUpBufferId, ballBufferId
+	// to padBottomBufferId, padRightBufferId, padUpBufferId, ballBufferId
     gl.bindBuffer( gl.ARRAY_BUFFER, padUpBufferId );
     
-    // The pointer to iterate over the array of points for the square moves here
+   // The pointer to iterate over the array of points for the square moves here
     var myPositionAttribute = gl.getAttribLocation( shaderProgram, "myPosition" );
     gl.vertexAttribPointer( myPositionAttribute, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( myPositionAttribute );
 
+	if(arrayOfKeysDown[keys.O] == true){//Left
+
+		pU0[0] -= xIncr;
+		pU1[0] -= xIncr;
+		pU2[0] -= xIncr;
+		pU3[0] -= xIncr;
+
+		
+	}else if(arrayOfKeysDown[keys.P] == true){//Right
+			pU0[0] += xIncr;
+			pU1[0] += xIncr;
+			pU2[0] += xIncr;
+			pU3[0] += xIncr;
+		}
+	arrayOfPointsUP = [pU0,pU1,pU2,pU3];
+	
+	// Create a buffer on the graphics card, and send array to the buffer for use in the shaders
+    padUpBufferId = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, padUpBufferId );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(arrayOfPointsUP), gl.STATIC_DRAW );
     
+	
+	
     gl.uniform4f( colorUniform, 0.0, 0.0, 1.0, 1.0 ); // send the color BLUE to the fragment shader
     
     // Force a draw of the square using the
@@ -219,18 +334,37 @@ function AnimPadUp() {
     gl.drawArrays( gl.TRIANGLE_FAN, 0, 4 );
 }
 
-function AnimPadLow() {
-	// FOLLOWING LINES ADDRESS THE RENDERING OF THE RIGHT PADDLE
+function AnimPadBottom() {
+	// FOLLOWING LINES ADDRESS THE RENDERING OF THE Bottom PADDLE
     
     // RE-BIND THE RIGHT PAD BUFFER (since the setup XXX () function binds the array buffer 
-	// to padLowBufferId, padRightBufferId, padUpBufferId, ballBufferId
-    gl.bindBuffer( gl.ARRAY_BUFFER, padLowBufferId );
+	// to padBottomBufferId, padRightBufferId, padUpBufferId, ballBufferId
+    gl.bindBuffer( gl.ARRAY_BUFFER, padBottomBufferId );
     
-    // The pointer to iterate over the array of points for the square moves here
     var myPositionAttribute = gl.getAttribLocation( shaderProgram, "myPosition" );
     gl.vertexAttribPointer( myPositionAttribute, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( myPositionAttribute );
+
+	if(arrayOfKeysDown[keys.V] == true){//Left
+
+		pB0[0] -= xIncr;
+		pB1[0] -= xIncr;
+		pB2[0] -= xIncr;
+		pB3[0] -= xIncr;
+
+		
+	}else if(arrayOfKeysDown[keys.B] == true){//Right
+			pB0[0] += xIncr;
+			pB1[0] += xIncr;
+			pB2[0] += xIncr;
+			pB3[0] += xIncr;
+		}
+	arrayOfPointsBottom = [pB0,pB1,pB2,pB3];
 	
+	// Create a buffer on the graphics card, and send array to the buffer for use in the shaders
+    padBottomBufferId = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, padBottomBufferId );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(arrayOfPointsBottom), gl.STATIC_DRAW );
     
     gl.uniform4f( colorUniform, 1.0, 1.0, 0.0, 1.0 ); // send the color YELLOW to the fragment shader
     
@@ -240,10 +374,11 @@ function AnimPadLow() {
 }
 
 function AnimPadBall() {
+	
 	// FOLLOWING LINES ADDRESS THE RENDERING OF THE RIGHT PADDLE
     
     // RE-BIND THE RIGHT PAD BUFFER (since the setup XXX () function binds the array buffer 
-	// to padLowBufferId, padRightBufferId, padUpBufferId, ballBufferId
+	// to padBottomBufferId, padRightBufferId, padUpBufferId, ballBufferId
     gl.bindBuffer( gl.ARRAY_BUFFER, ballBufferId );
     
     // The pointer to iterate over the array of points for the square moves here
@@ -261,6 +396,42 @@ function AnimPadBall() {
     gl.drawArrays( gl.TRIANGLE_FAN, 0, 4 );
 }
 
+function moveKeys(event) {
+	var theKeyCode = event.keyCode;
+	if ( theKeyCode == keys.ArrowUp )
+	{
+		arrayOfKeysDown[keys.ArrowUp] = !(arrayOfKeysDown[keys.ArrowUp]);
+		//console.log("work");
+	}
+	if ( theKeyCode == keys.ArrowDown )
+	{
+		arrayOfKeysDown[keys.ArrowDown] = !(arrayOfKeysDown[keys.ArrowDown]); 
+	}
+	if ( theKeyCode == keys.W )
+	{
+		arrayOfKeysDown[keys.W] = !(arrayOfKeysDown[keys.W]);
+	}
+	if ( theKeyCode == keys.S )
+	{
+		arrayOfKeysDown[keys.S] = !(arrayOfKeysDown[keys.S]);
+	}
+	if ( theKeyCode == keys.O )
+	{
+		arrayOfKeysDown[keys.O] = ! (arrayOfKeysDown[keys.O]);
+	}
+	if ( theKeyCode == keys.P )
+	{
+		arrayOfKeysDown[keys.P] = !(arrayOfKeysDown[keys.P]);
+	}
+	if ( theKeyCode == keys.V )
+	{
+		arrayOfKeysDown[keys.V] = !(arrayOfKeysDown[keys.V]);
+	}
+	if ( theKeyCode == keys.B )
+	{
+		arrayOfKeysDown[keys.B] = !(arrayOfKeysDown[keys.B]);
+	}
+}
 
 function render(){
 	
@@ -272,7 +443,7 @@ function render(){
     
 	AnimPadBall();
 	AnimPadLeft();
-	AnimPadLow()
+	AnimPadBottom()
 	AnimPadRight();
 	AnimPadUp();
     

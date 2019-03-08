@@ -1,16 +1,11 @@
 var gl;
 var shaderProgram;
 
-
 var padLeftBufferId;
 var padRightBufferId;
 var padUpBufferId;
 var padLowBufferId;
 var ballBufferId;
-
-
-var thetaSquare;
-var thetaTriangle;
 
 var thetaUniform;
 var colorUniform;
@@ -48,15 +43,11 @@ function init() {
     gl.useProgram( shaderProgram );
 	
 	
-	
+	//Initialize the location for each of the Paddles and the ball
 	setupPadLeft();
-	
 	setupPadRight();
-	
 	setupPadUp();
-	
 	setupPadLow();
-	
 	setupBall();
 	
 	render();
@@ -178,10 +169,7 @@ function AnimPadLeft(){
     var myPositionAttribute = gl.getAttribLocation( shaderProgram, "myPosition" );
     gl.vertexAttribPointer( myPositionAttribute, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( myPositionAttribute );
-	
-    
-	thetaSquare = thetaSquare + .01;
-    gl.uniform1f( thetaUniform, thetaSquare ); // send the angle to the vertex shader
+
 	
 	
     gl.uniform4f( colorUniform, 1.0, 0.0, 0.0, 1.0 ); // send the color RED to the fragment shader
@@ -204,11 +192,6 @@ function AnimPadRight() {
     gl.vertexAttribPointer( myPositionAttribute, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( myPositionAttribute );
 	
-	thetaSquare = thetaSquare + .01;
-    gl.uniform1f( thetaUniform, thetaSquare ); // send the angle to the vertex shader
-	
-	
-    
     gl.uniform4f( colorUniform, 0.0, 1.0, 0.0, 1.0 ); // send the color GREED to the fragment shader
     
     // Force a draw of the square using the
@@ -227,11 +210,7 @@ function AnimPadUp() {
     var myPositionAttribute = gl.getAttribLocation( shaderProgram, "myPosition" );
     gl.vertexAttribPointer( myPositionAttribute, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( myPositionAttribute );
-	
-	thetaSquare = thetaSquare + .01;
-    gl.uniform1f( thetaUniform, thetaSquare ); // send the angle to the vertex shader
-	
-	
+
     
     gl.uniform4f( colorUniform, 0.0, 0.0, 1.0, 1.0 ); // send the color BLUE to the fragment shader
     
@@ -252,10 +231,6 @@ function AnimPadLow() {
     gl.vertexAttribPointer( myPositionAttribute, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( myPositionAttribute );
 	
-	thetaSquare = thetaSquare + .01;
-    gl.uniform1f( thetaUniform, thetaSquare ); // send the angle to the vertex shader
-	
-	
     
     gl.uniform4f( colorUniform, 1.0, 1.0, 0.0, 1.0 ); // send the color YELLOW to the fragment shader
     
@@ -275,10 +250,6 @@ function AnimPadBall() {
     var myPositionAttribute = gl.getAttribLocation( shaderProgram, "myPosition" );
     gl.vertexAttribPointer( myPositionAttribute, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( myPositionAttribute );
-	
-	thetaSquare = thetaSquare + .01;
-    gl.uniform1f( thetaUniform, thetaSquare ); // send the angle to the vertex shader
-	
     
 	
 	//will need to change this to change with most recent hit
@@ -293,22 +264,17 @@ function AnimPadBall() {
 
 function render(){
 	
-	//Translation Matrix
-	//M = [1.0, 0.0, 0.0, 
-	//	 0.0, 1.0, 0.0,
-	//	  tx,  ty, 1.0];
-		  
 	// Force the WebGL context to clear the color buffer
     gl.clear( gl.COLOR_BUFFER_BIT );
     
     colorUniform = gl.getUniformLocation( shaderProgram, "shapeColor" ); // color in fragment shader
     
     
-   AnimPadBall();
-   AnimPadLeft();
-   AnimPadLow()
-   AnimPadRight();
-   AnimPadUp();
+	AnimPadBall();
+	AnimPadLeft();
+	AnimPadLow()
+	AnimPadRight();
+	AnimPadUp();
     
-   requestAnimFrame( render );
+	requestAnimFrame( render );
 }

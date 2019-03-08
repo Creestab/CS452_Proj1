@@ -15,6 +15,12 @@ var arrayOfKeysDown = {};
 var yIncr;
 var xIncr;
 
+var ballXIncr;
+var ballYIncr;
+
+var lastPadTocuhed;
+
+
 //Paddle LEFT
     var pL0;
 	var pL1;
@@ -84,12 +90,28 @@ function init() {
 		arrayOfKeysDown[iter] = false;
 	}
 	
+	//last paddle touched
+	lastPadTocuhed = "";
+	
 	//incrementing variables
 	xIncr = 0.02;
 	yIncr = 0.02;
+	//ball movement 
+	ballXIncr = (Math.random()/50) +0.001;
+	ballYIncr = (Math.random()/50) +0.001;
 	
-	score_label = document.getElementById("score-label");
-	score_label.innerHTML = "Red Score: 0";
+	//ScoreBoard
+	red_score = document.getElementById("score-red");
+	red_score.innerHTML = "Red: 0";
+	
+	yellow_score = document.getElementById("score-yellow");
+	yellow_score.innerHTML = "Yellow: 0";
+	
+	green_score = document.getElementById("score-green");
+	green_score.innerHTML = "Green: 0";
+	
+	blue_score = document.getElementById("score-blue");
+	blue_score.innerHTML = "Blue: 0";
 		
 	//Create shader program, needs vertex and fragment shader code 
 	//in GSL to be written in HTML file 
@@ -381,10 +403,60 @@ function AnimPadBall() {
 	// to padBottomBufferId, padRightBufferId, padUpBufferId, ballBufferId
     gl.bindBuffer( gl.ARRAY_BUFFER, ballBufferId );
     
-    // The pointer to iterate over the array of points for the square moves here
     var myPositionAttribute = gl.getAttribLocation( shaderProgram, "myPosition" );
     gl.vertexAttribPointer( myPositionAttribute, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( myPositionAttribute );
+
+	
+	//Hitting Right Bound
+	if(p0[0] >= 1){
+		ballXIncr = -ballXIncr
+		if(p0[1] >0.5 ){
+			ballYIncr = ballYIncr + 0.01;
+		}else if(p0[1] < -0.5 ){
+			ballYIncr = ballYIncr - 0.01;
+		}
+	}
+	//Hitting Left Bound
+	if(p0[0] <= -0.95){
+		ballXIncr = -ballXIncr
+		if(p0[1] >0.5 ){
+			ballYIncr = ballYIncr + 0.01;
+		}else if(p0[1] < -0.5 ){
+			ballYIncr = ballYIncr - 0.01;
+		}
+	}
+	//Hitting Upper Bound
+	if(p0[1] <= -0.95){
+		ballYIncr = -ballYIncr
+		if(p0[0] >0.5 ){
+			ballXIncr = ballXIncr + 0.01;
+		}else if(p0[0] < -0.5 ){
+			ballXIncr = ballXIncr - 0.01;
+		}
+	}
+	//Hitting Lower Bound
+	if(p0[1] >= 1){
+		ballYIncr = -ballYIncr
+		if(p0[0] >0.5 ){
+			ballXIncr = ballXIncr + 0.01;
+		}else if(p0[0] < -0.5 ){
+			ballXIncr = ballXIncr - 0.01;
+		}
+	}
+	//change angle of movement based on where hit
+	//Normal Movement
+	p0[0] += ballXIncr; p0[1] += ballYIncr;
+	p1[0] += ballXIncr; p1[1] += ballYIncr;
+	p2[0] += ballXIncr; p2[1] += ballYIncr;
+	p3[0] += ballXIncr; p3[1] += ballYIncr;
+	
+	arrayOfPointsBALL = [p0,p1,p2,p3];
+	
+	// Create a buffer on the graphics card, and send array to the buffer for use in the shaders
+    ballBufferId = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, ballBufferId );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(arrayOfPointsBALL), gl.STATIC_DRAW );
     
 	
 	//will need to change this to change with most recent hit
@@ -395,6 +467,10 @@ function AnimPadBall() {
     // 'drawArrays()' call
     gl.drawArrays( gl.TRIANGLE_FAN, 0, 4 );
 }
+
+/*
+
+	*/
 
 function moveKeys(event) {
 	var theKeyCode = event.keyCode;

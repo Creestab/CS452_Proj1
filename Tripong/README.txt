@@ -4,7 +4,8 @@ Project 1: Tripong
 
 Game Rules:
 
-Hit the bouncing square with your paddle to keep it from hitting your side of the field. Earn 2 points for scoring and lose 1 for letting the square in.
+Hit the bouncing square with your paddle to keep it from hitting your side of the field. 
+Earn 2 points for scoring and lose 1 for letting the square in.
 
 
 Controls:

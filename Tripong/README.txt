@@ -2,6 +2,10 @@ Patrick Delaney and Chris Berghoff
 Project 1: Tripong
 3/5/19
 
+Development:
+
+
+
 Game Rules:
 
 Hit the bouncing square with your paddle to keep it from hitting your side of the field. 
@@ -14,11 +18,11 @@ Player 1 (Red)
 	Up:	W
 	Down:	S
 Player 2 (Blue)
-	Up:	[
-	Down:	]
+	Left:	O
+	Right:	P
 Player 3 (Green)
 	Up:	Up Arrow
 	Down:	Down Arrow
 Player 4 (Yellow)
-	Up:	V
-	Down:	B
+	Left:	V
+	Right:	B

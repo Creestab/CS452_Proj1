@@ -97,8 +97,8 @@ function init() {
 	xIncr = 0.02;
 	yIncr = 0.02;
 	//ball movement 
-	ballXIncr = (Math.random()/50) +0.001;
-	ballYIncr = (Math.random()/50) +0.001;
+	ballXIncr = 0.001;
+	ballYIncr = 0.001;
 	
 	//ScoreBoard
 	red_score = document.getElementById("score-red");
@@ -223,6 +223,11 @@ function setupBall() {
 	
 	arrayOfPointsBALL = [p0,p1,p2,p3];
 	
+    //Vector speed of .02
+	ballXIncr = (Math.random()/25) - .02;
+	if (ballXIncr < 0) {ballYIncr = Math.random() < 0.5 ? (-0.02 - ballXIncr) : (0.02 + ballXIncr);}
+    else {ballYIncr = Math.random() < 0.5 ? (0.02 - ballXIncr) : (-0.02 + ballXIncr);}
+
 	// Create a buffer on the graphics card, and send array to the buffer for use in the shaders
     ballBufferId = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, ballBufferId );

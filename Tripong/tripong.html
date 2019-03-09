@@ -1,6 +1,52 @@
 <!DOCTYPE html>
 <html>
     <head>
+		<style>
+			* {
+				box-sizing: border-box;
+				color: white;
+			}
+
+			.label {
+				
+			}
+
+			.grid-container {
+			display: grid;
+			grid-template-columns: 125px 600px 125px;
+			grid-gap: 5px;
+			background-color: white;
+			padding: 5px;
+			}
+
+			.grid-container > div {
+			background-color: rgba(255, 255, 255, 0.8);
+			text-align: center;
+			padding: 10px 0;
+			font-size: 30px;
+			}
+
+			.game {
+				height: 550px;
+				column-width: 550px;
+			}
+
+			.score-sides {
+				height: 550px;
+				column-width: 100px;
+			}
+
+			.score-topbot {
+				height: 50px;
+				column-width: 550px;
+			}
+
+			.details {
+				height: 100px;
+				column-width: 550px;
+			}
+		</style>
+
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
 			<title>Pong</title>
 			<script type="text/javascript" src="Common/webgl-utils.js"></script>
@@ -46,16 +92,31 @@
     </head>
     
     <body onload="init()" onkeydown="moveKeys(event)" onkeyup="moveKeys(event)">
-		<canvas id="gl-canvas" width="512" height="512"></canvas>
-		<p>Controls: Red ( ↑ / ↓ ), Blue ( O / P ), Green ( W / S ), Yellow ( V / B ) </p>
-		<label id="score-red">
-		<p> </p>
-		</label>
-		<label id="score-blue">
-		</label>
-		<label id="score-green">
-		</label>
-		<label id="score-yellow">
-		</label>
+		<div class="grid-container">
+			<div></div>
+			<div class="score-topbot">
+				<label id="score-green"></label>
+			</div>
+			<div></div>
+			<div class="score-sides">
+				<label id="score-blue"></label>
+			</div>
+			<div>
+				<canvas class="game" id="gl-canvas" width="512" height="512"></canvas>
+			</div>
+			<div class="score-sides">
+				<label id="score-red"></label>
+			</div>
+			<div></div>
+			<div>
+				<label id="score-yellow"></label>
+			</div>
+			<div></div>
+			<div></div>
+			<div class="details">
+				<p>Controls: Blue ( W / S ), Red ( ↑ / ↓ ), Green ( O / P ), Yellow ( V / B )</p>
+			</div>
+			<div></div>
+		</div>
     </body>
 </html>

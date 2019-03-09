@@ -19,7 +19,8 @@ var ballXIncr;
 var ballYIncr;
 
 var lastPad;
-var scores = [0,0,0,0]
+var scores;
+var wins;
 
 //Paddle LEFT (Player 1)
     var pL0;
@@ -60,6 +61,8 @@ var scores = [0,0,0,0]
 	
 /// store key codes and currently pressed ones
 var keys = {};
+    keys.Spacebar = 32;
+    keys.Esc = 27;
     //Right Player Controls
 	keys.ArrowUp = 38;
     keys.ArrowDown = 40;
@@ -91,8 +94,9 @@ function init() {
 	}
 	
 	//last paddle touched
-	lastPad = -1
-    scores
+	lastPad = -1;
+    scores = [0,0,0,0];
+    wins = [0,0,0,0];
 	
 	//incrementing variables
 	xIncr = 0.03;
@@ -102,17 +106,17 @@ function init() {
 	ballYIncr = 0.001;
 	
 	//ScoreBoard
+	blue_score = document.getElementById("score-blue");
+	blue_score.innerHTML = "Blue: " + scores[0];
+
 	red_score = document.getElementById("score-red");
-	red_score.innerHTML = "Red: 0";
+	red_score.innerHTML = "Red: " + scores[1];
+
+	green_score = document.getElementById("score-green");
+	green_score.innerHTML = "Green: " + scores[2];
 	
 	yellow_score = document.getElementById("score-yellow");
-	yellow_score.innerHTML = "Yellow: 0";
-	
-	green_score = document.getElementById("score-green");
-	green_score.innerHTML = "Green: 0";
-	
-	blue_score = document.getElementById("score-blue");
-	blue_score.innerHTML = "Blue: 0";
+	yellow_score.innerHTML = "Yellow: " + scores[3];
 		
 	//Create shader program, needs vertex and fragment shader code 
 	//in GSL to be written in HTML file 
@@ -126,6 +130,13 @@ function init() {
 	setupPadRight();
 	setupPadUp();
 	setupPadBottom();
+
+    // Force the WebGL context to clear the color buffer
+    gl.clear( gl.COLOR_BUFFER_BIT );
+    colorUniform = gl.getUniformLocation( shaderProgram, "shapeColor" ); // color in fragment shader
+
+    //while(arrayOfKeysDown[keys.Spacebar] == false && arrayOfKeysDown[keys.Esc] == false){};
+    //if(arrayOfKeysDown[keys.Esc] == true) {return process.exit(1);}
 	
 	render();
 }
@@ -328,21 +339,25 @@ function AnimBall() {
     if(p2[0] < -1) {
         scores[lastPad] += 2;
         scores[0] -= 1;
+        lastPad = -1;
         setupBall();
     }
     if(p0[0] > 1) {
         scores[lastPad] += 2;
         scores[1] -= 1;
+        lastPad = -1;
         setupBall();
     }
     if(p3[1] > 1) {
         scores[lastPad] += 2;
         scores[2] -= 1;
+        lastPad = -1;
         setupBall();
     }
     if(p1[1] < -1) {
         scores[lastPad] += 2;
         scores[3] -= 1;
+        lastPad = -1;
         setupBall();
     }
 	
@@ -428,7 +443,7 @@ function AnimPadLeft() {
     gl.bindBuffer( gl.ARRAY_BUFFER, padLeftBufferId );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(arrayOfPointsLEFT), gl.STATIC_DRAW );
 	
-    gl.uniform4f( colorUniform, 0.0, 1.0, 0.0, 1.0 ); // send the color GREED to the fragment shader
+    gl.uniform4f( colorUniform, 0.0, 0.0, 1.0, 1.0 ); // send the color BLUE to the fragment shader
     
     // Force a draw of the square using the
     // 'drawArrays()' call
@@ -466,7 +481,7 @@ function AnimPadUp() {
     gl.bindBuffer( gl.ARRAY_BUFFER, padUpBufferId );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(arrayOfPointsUP), gl.STATIC_DRAW );
     
-    gl.uniform4f( colorUniform, 0.0, 0.0, 1.0, 1.0 ); // send the color BLUE to the fragment shader
+    gl.uniform4f( colorUniform, 0.0, 1.0, 0.0, 1.0 ); // send the color GREEN to the fragment shader
     
     // Force a draw of the square using the
     // 'drawArrays()' call
@@ -563,6 +578,27 @@ function render(){
 	AnimPadRight();
 	AnimPadUp();
 	AnimBall();
+
+    for(i = 0; i < 4; i++) {
+        if(scores[i] > 4) {
+            //while(arrayOfKeysDown[keys.Spacebar] == false && arrayOfKeysDown[keys.Esc] == false){};
+            if(arrayOfKeysDown[keys.Esc] == true) {return process.exit(1);}
+            wins[i] += 1;
+            scores = [0,0,0,0];
+            	
+            //Initialize the location for each of the Paddles and the ball
+	        setupBall();
+	        setupPadLeft();
+	        setupPadRight();
+	        setupPadUp();
+	        setupPadBottom();
+        }
+    }
+
+    blue_score.innerHTML = "Blue: " + scores[0];
+	red_score.innerHTML = "Red: " + scores[1];
+	green_score.innerHTML = "Green: " + scores[2];
+	yellow_score.innerHTML = "Yellow: " + scores[3];
     
 	requestAnimFrame( render );
 }

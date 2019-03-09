@@ -19,30 +19,30 @@ var ballXIncr;
 var ballYIncr;
 
 var lastPad;
+var scores = [0,0,0,0]
 
-
-//Paddle LEFT
+//Paddle LEFT (Player 1)
     var pL0;
 	var pL1;
 	var pL2;
 	var pL3;
 	
 	var arrayOfPointsLEFT;
-//Paddle RIGHT
+//Paddle RIGHT (Player 2)
     var pR0;
 	var pR1;
 	var pR2;
 	var pR3;
 	
 	var arrayOfPointsRIGHT;
-//Paddle UP
+//Paddle UP (Player 3)
     var pU0;
 	var pU1;
 	var pU2;
 	var pU3;
 	
 	var arrayOfPointsUP;
-//Paddle Bottom (Bottom)
+//Paddle Bottom (Player 4)
     var pB0;
 	var pB1;
 	var pB2;
@@ -91,11 +91,12 @@ function init() {
 	}
 	
 	//last paddle touched
-	lastPad = "";
+	lastPad = -1
+    scores
 	
 	//incrementing variables
-	xIncr = 0.02;
-	yIncr = 0.02;
+	xIncr = 0.03;
+	yIncr = 0.03;
 	//ball movement 
 	ballXIncr = 0.001;
 	ballYIncr = 0.001;
@@ -250,25 +251,9 @@ function AnimBall() {
     gl.vertexAttribPointer( myPositionAttribute, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( myPositionAttribute );
 
-	//Hitting Right Paddle
-	if(lastPad != "Right" && (p0[0] > (pR3[0] - 0.03) && p0[0] < (pR3[0] + 0.07)) && (p1[1] < pR3[1] && p0[1] > pR2[1])) {
-        lastPad = "Right";
-		if(arrayOfKeysDown[keys.ArrowUp] == true) {
-            ballXIncr = 0 - ballXIncr;
-            ballYIncr += .005;
-        }
-        else if(arrayOfKeysDown[keys.ArrowDown] == true) {
-            ballXIncr = 0 - ballXIncr;
-            ballYIncr -= .005;
-        }
-        else {
-            ballXIncr = 0 - ballXIncr;
-        }
-	}
-
 	//Hitting Left Paddle
-	if(lastPad != "Left" && (p3[0] < (pL0[0] + 0.03) && p3[0] > (pL0[0] - 0.07)) && (p2[1] < pL0[1] && p3[1] > pL1[1])) {
-        lastPad = "Left";
+	if(lastPad != 0 && (p3[0] < (pL0[0] + 0.03) && p3[0] > (pL0[0] - 0.07)) && (p2[1] < pL0[1] && p3[1] > pL1[1])) {
+        lastPad = 0;
 		if(arrayOfKeysDown[keys.W] == true) {
             ballXIncr = 0 - ballXIncr;
             ballYIncr += .005;
@@ -282,9 +267,25 @@ function AnimBall() {
         }
 	}
 
+	//Hitting Right Paddle
+	if(lastPad != 1 && (p0[0] > (pR3[0] - 0.03) && p0[0] < (pR3[0] + 0.07)) && (p1[1] < pR3[1] && p0[1] > pR2[1])) {
+        lastPad = 1;
+		if(arrayOfKeysDown[keys.ArrowUp] == true) {
+            ballXIncr = 0 - ballXIncr;
+            ballYIncr += .005;
+        }
+        else if(arrayOfKeysDown[keys.ArrowDown] == true) {
+            ballXIncr = 0 - ballXIncr;
+            ballYIncr -= .005;
+        }
+        else {
+            ballXIncr = 0 - ballXIncr;
+        }
+	}
+
 	//Hitting Upper Paddle
-	if(lastPad != "Upper" && (p0[1] > (pU1[1] - 0.03) && p0[1] < (pU0[1] + 0.07)) && (p3[0] < pU1[0] && p0[0] > pU2[0])) {
-        lastPad = "Upper";
+	if(lastPad != 2 && (p0[1] > (pU1[1] - 0.03) && p0[1] < (pU0[1] + 0.07)) && (p3[0] < pU1[0] && p0[0] > pU2[0])) {
+        lastPad = 2;
 		if(arrayOfKeysDown[keys.O] == true) {
             ballYIncr = 0 - ballYIncr;
             ballXIncr -= .005;
@@ -299,8 +300,8 @@ function AnimBall() {
 	}
 
 	//Hitting Bottom Paddle
-	if(lastPad != "Bottom" && (p1[1] < (pB0[1] + 0.03) && p1[1] > (pB0[1] - 0.07)) && (p2[0] < pB0[0] && p1[0] > pB3[0])) {
-        lastPad = "Bottom";
+	if(lastPad != 3 && (p1[1] < (pB0[1] + 0.03) && p1[1] > (pB0[1] - 0.07)) && (p2[0] < pB0[0] && p1[0] > pB3[0])) {
+        lastPad = 3;
 		if(arrayOfKeysDown[keys.V] == true) {
             ballYIncr = 0 - ballYIncr;
             ballXIncr -= .005;
@@ -322,6 +323,28 @@ function AnimBall() {
 	p3[0] += ballXIncr; p3[1] += ballYIncr;
 	
 	arrayOfPointsBALL = [p0,p1,p2,p3];
+
+    //Adjust player scores
+    if(p2[0] < -1) {
+        scores[lastPad] += 2;
+        scores[0] -= 1;
+        setupBall();
+    }
+    if(p0[0] > 1) {
+        scores[lastPad] += 2;
+        scores[1] -= 1;
+        setupBall();
+    }
+    if(p3[1] > 1) {
+        scores[lastPad] += 2;
+        scores[2] -= 1;
+        setupBall();
+    }
+    if(p1[1] < -1) {
+        scores[lastPad] += 2;
+        scores[3] -= 1;
+        setupBall();
+    }
 	
 	// Create a buffer on the graphics card, and send array to the buffer for use in the shaders
     ballBufferId = gl.createBuffer();
@@ -348,13 +371,13 @@ function AnimPadRight(){
     gl.vertexAttribPointer( myPositionAttribute, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( myPositionAttribute );
 
-	if(arrayOfKeysDown[keys.ArrowUp] == true){
+	if(pR0[1] < 1 && arrayOfKeysDown[keys.ArrowUp] == true){
 		pR0[1] += yIncr;
 		pR1[1] += yIncr;
 		pR2[1] += yIncr;
 		pR3[1] += yIncr;
 	}
-	if(arrayOfKeysDown[keys.ArrowDown] == true){
+	if(pR1[1] > -1 && arrayOfKeysDown[keys.ArrowDown] == true){
 		pR0[1] -= yIncr;
 		pR1[1] -= yIncr;
 		pR2[1] -= yIncr;
@@ -386,13 +409,13 @@ function AnimPadLeft() {
     gl.vertexAttribPointer( myPositionAttribute, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( myPositionAttribute );
 	
-	if(arrayOfKeysDown[keys.W] == true){ //Up
+	if(pL0[1] < 1 && arrayOfKeysDown[keys.W] == true){ //Up
 		pL0[1] += yIncr;
 		pL1[1] += yIncr;
 		pL2[1] += yIncr;
 		pL3[1] += yIncr;	
 	}
-    if(arrayOfKeysDown[keys.S] == true){ //Down
+    if(pL1[1] > -1 && arrayOfKeysDown[keys.S] == true){ //Down
 		pL0[1] -= yIncr;
 		pL1[1] -= yIncr;
 		pL2[1] -= yIncr;
@@ -424,13 +447,13 @@ function AnimPadUp() {
     gl.vertexAttribPointer( myPositionAttribute, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( myPositionAttribute );
 
-	if(arrayOfKeysDown[keys.O] == true){//Left
+	if(pU0[0] < 1 && arrayOfKeysDown[keys.O] == true){//Left
 		pU0[0] -= xIncr;
 		pU1[0] -= xIncr;
 		pU2[0] -= xIncr;
 		pU3[0] -= xIncr;
     }
-    if(arrayOfKeysDown[keys.P] == true){//Right
+    if(pU3[0] > -1 && arrayOfKeysDown[keys.P] == true){//Right
 		pU0[0] += xIncr;
 		pU1[0] += xIncr;
 		pU2[0] += xIncr;
@@ -461,13 +484,13 @@ function AnimPadBottom() {
     gl.vertexAttribPointer( myPositionAttribute, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( myPositionAttribute );
 
-	if(arrayOfKeysDown[keys.V] == true){//Left
+	if(pB0[0] < 1 && arrayOfKeysDown[keys.V] == true){//Left
 		pB0[0] -= xIncr;
 		pB1[0] -= xIncr;
 		pB2[0] -= xIncr;
 		pB3[0] -= xIncr;
         }
-    if(arrayOfKeysDown[keys.B] == true){//Right
+    if(pB3[0] > -1 && arrayOfKeysDown[keys.B] == true){//Right
 		pB0[0] += xIncr;
 		pB1[0] += xIncr;
 		pB2[0] += xIncr;

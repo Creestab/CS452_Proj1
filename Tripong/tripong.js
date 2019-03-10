@@ -580,6 +580,7 @@ function render(){
 	AnimBall();
 
     for(i = 0; i < 4; i++) {
+        if(scores[i] < 0) {scores[i] = 0;}
         if(scores[i] > 4) {
             //while(arrayOfKeysDown[keys.Spacebar] == false && arrayOfKeysDown[keys.Esc] == false){};
             if(arrayOfKeysDown[keys.Esc] == true) {return process.exit(1);}

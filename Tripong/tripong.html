@@ -2,13 +2,14 @@
 <html>
     <head>
 		<style>
-			* {
+			{
 				box-sizing: border-box;
+				text-align: center;
 				color: white;
 			}
 
 			.label {
-				
+			font-size: 32px;
 			}
 
 			.grid-container {
@@ -20,27 +21,26 @@
 
 			.grid-container > div {
 			text-align: center;
-			padding: 10px 0;
-			font-size: 30px;
+			padding: 5px;
 			}
 
 			.game {
-				height: 550px;
+				height: 520px;
 				column-width: 550px;
 			}
 
 			.score-sides {
-				height: 550px;
+				height: 520px;
 				column-width: 100px;
 			}
 
 			.score-topbot {
-				height: 50px;
+				height: 40px;
 				column-width: 550px;
 			}
 
 			.details {
-				height: 100px;
+				height: 70px;
 				column-width: 550px;
 			}
 		</style>
@@ -97,12 +97,26 @@
 			</div>
 			<div></div>
 			<div class="score-sides">
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
 				<label id="score-blue"></label>
 			</div>
 			<div>
 				<canvas class="game" id="gl-canvas" width="512" height="512"></canvas>
 			</div>
 			<div class="score-sides">
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
 				<label id="score-red"></label>
 			</div>
 			<div></div>
